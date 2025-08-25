@@ -6,6 +6,12 @@ buildscript {
 		jacocoVersion = '0.8.13'
 		pitestVersion = '1.19.0-rc.1'
         lombokVersion = '1.18.38'
+
+        // ➕ Nuevas versiones
+        springdocVersion = '2.8.11'
+        r2dbcPostgresqlVersion = '1.0.5.RELEASE'
+        flywayVersion = '10.20.1'
+        awsSdkVersion = '2.25.55'
 	}
 }
 
@@ -16,6 +22,13 @@ plugins {
 	id 'org.sonarqube' version "${sonarVersion}"
 	id 'jacoco'
 }
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
 
 sonar {
     def modules = subprojects.projectDir.collect { "${it.toString().replace(project.projectDir.toString() + "/", "")}" }
