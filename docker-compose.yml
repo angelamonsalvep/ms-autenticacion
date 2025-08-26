@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    container_name: ms_autenticacion_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: autenticacion
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  localstack:
+    image: localstack/localstack:2.2
+    container_name: localstack
+    environment:
+      - SERVICES=sqs,dynamodb
+      - DEFAULT_REGION=us-east-1
+      - DATA_DIR=/tmp/localstack/data
+    ports:
+      - "4566:4566"
+      - "4571:4571"
+    networks:
+      - app-network
+    volumes:
+      - localstack-data:/tmp/localstack
+
+  app-service:
+    build: .
+    container_name: ms_autenticacion_app
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - localstack
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+
+volumes:
+  db-data:
+  localstack-data:
+
+networks:
+  app-network:
