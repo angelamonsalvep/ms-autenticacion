@@ -7,7 +7,10 @@ spring:
   devtools:
     add-properties: false
   r2dbc:
-    url: ${SPRING_R2DBC_URL:r2dbc:postgresql://localhost:5432/autenticacion?currentSchema=public}
+    host: ${SPRING_R2DBC_HOST:localhost}
+    port: ${SPRING_R2DBC_PORT:5432}
+    database: ${SPRING_R2DBC_DATABASE:autenticacion}
+    schema: ${SPRING_R2DBC_SCHEMA:auth}
     username: ${SPRING_R2DBC_USERNAME:postgres}
     password: ${SPRING_R2DBC_PASSWORD:postgres}
   flyway:
@@ -15,7 +18,7 @@ spring:
     url: ${SPRING_FLYWAY_URL:jdbc:postgresql://localhost:5432/autenticacion}
     user: ${SPRING_FLYWAY_USER:postgres}
     password: ${SPRING_FLYWAY_PASSWORD:postgres}
-    schemas: ${SPRING_FLYWAY_SCHEMA:public}
+    schemas: ${SPRING_FLYWAY_SCHEMA:auth}
   h2:
     console:
       enabled: true
@@ -41,8 +44,8 @@ springdoc:
     path: /swagger-ui.html
 
 aws:
-  region: ${AWS_REGION:us-east-1}
   sqs:
+    region: ${AWS_REGION:us-east-1}
     queueUrl: ${AWS_SQS_QUEUE_URL:http://localhost:4566/000000000000/sample}
     endpoint: ${AWS_SQS_ENDPOINT:http://localhost:4566}
   dynamodb:
