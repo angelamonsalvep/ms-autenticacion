@@ -19,6 +19,9 @@ spring:
     user: ${SPRING_FLYWAY_USER:postgres}
     password: ${SPRING_FLYWAY_PASSWORD:postgres}
     schemas: ${SPRING_FLYWAY_SCHEMA:auth}
+    baseline-on-migrate: true     # 👈 crea baseline si la DB ya tiene tablas
+    validate-on-migrate: false    # 👈 evita el error de versión no soportada
+    mixed: true                   # 👈 permite SQL y Java-based migrations en conjunto
   h2:
     console:
       enabled: true
