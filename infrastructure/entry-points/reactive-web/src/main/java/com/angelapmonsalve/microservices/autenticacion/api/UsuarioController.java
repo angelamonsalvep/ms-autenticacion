@@ -1,21 +1,22 @@
 package com.angelapmonsalve.microservices.autenticacion.api;
-import lombok.AllArgsConstructor;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
+import com.angelapmonsalve.microservices.autenticacion.model.usuario.Usuario;
+import com.angelapmonsalve.microservices.autenticacion.usecase.registrarusuario.RegistrarUsuarioUseCase;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
-@AllArgsConstructor
-public class ApiRest {
-//    private final MyUseCase useCase;
+@RequestMapping("/api/v1/usuarios")
+@RequiredArgsConstructor
+public class UsuarioController {
 
+    private final RegistrarUsuarioUseCase registrarUsuarioUseCase;
 
-    @GetMapping(path = "/usecase/path")
-    public Mono<String> commandName() {
-//      return useCase.doAction();
-        return Mono.just("");
+    @PostMapping
+    public Mono<Usuario> registrarUsuario(@RequestBody Usuario usuario) {
+        return registrarUsuarioUseCase.registrarUsuario(usuario);
     }
 }

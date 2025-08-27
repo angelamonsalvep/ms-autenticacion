@@ -8,9 +8,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-@ContextConfiguration(classes = {ApiRest.class})
+@ContextConfiguration(classes = {UsuarioController.class})
 @WebFluxTest
-class ApiRestTest {
+class UsuarioControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
