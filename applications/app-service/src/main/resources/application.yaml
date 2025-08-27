@@ -50,3 +50,5 @@ aws:
     endpoint: ${AWS_SQS_ENDPOINT:http://localhost:4566}
   dynamodb:
     endpoint: ${AWS_DYNAMODB_ENDPOINT:http://localhost:4566}
+
+debug: true
