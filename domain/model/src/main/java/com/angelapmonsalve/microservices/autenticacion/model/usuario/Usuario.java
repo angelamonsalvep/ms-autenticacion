@@ -1,14 +1,21 @@
 package com.angelapmonsalve.microservices.autenticacion.model.usuario;
-import lombok.Builder;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 //import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
-//@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder(toBuilder = true)
 public class Usuario {
+    private String id; // generado en DB
+    private String nombres;
+    private String apellidos;
+    private LocalDate fechaNacimiento;
+    private String direccion;
+    private String telefono;
+    private String correoElectronico;
+    private Double salarioBase;
 }
