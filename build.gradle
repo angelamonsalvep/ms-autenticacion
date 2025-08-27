@@ -10,7 +10,7 @@ buildscript {
         // ➕ Nuevas versiones
         springdocVersion = '2.8.11'
         r2dbcPostgresqlVersion = '1.0.5.RELEASE'
-        flywayVersion = '10.20.1'
+        flywayVersion = '11.10.0'
         awsSdkVersion = '2.25.55'
 	}
 }

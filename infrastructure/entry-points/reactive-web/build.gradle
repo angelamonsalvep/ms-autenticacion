@@ -1,12 +1,33 @@
+plugins {
+    id 'org.springframework.boot' apply false
+    id 'io.spring.dependency-management'
+    id 'java'
+}
+
 dependencies {
     implementation project(':usecase')
     implementation project(':model')
+    implementation project(':r2dbc-postgresql')
+
+    // Spring Boot starters
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'io.micrometer:micrometer-registry-prometheus'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Observabilidad
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
+    // OpenAPI / Swagger para WebFlux
     implementation "org.springdoc:springdoc-openapi-starter-webflux-ui:${springdocVersion}"
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'io.projectreactor:reactor-test'
-    testImplementation 'org.mockito:mockito-core'
+
+    // Reactive Commons object mapper
+    implementation 'org.reactivecommons.utils:object-mapper-api:0.1.0'
+
+    // ✅ Tests (usar solo lo necesario)
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'  // incluye JUnit 5, Mockito y AssertJ
+    testImplementation 'io.projectreactor:reactor-test' // para StepVerifier
+}
+
+test {
+    useJUnitPlatform()
 }

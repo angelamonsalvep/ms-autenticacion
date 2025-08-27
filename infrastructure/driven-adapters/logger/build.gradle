@@ -2,9 +2,9 @@ dependencies {
     implementation project(':model')
     implementation 'org.springframework:spring-context'
 
-    // SLF4J API (necesario para que compile bien)
-    implementation 'org.slf4j:slf4j-api:2.0.16'
+    // SLF4J API (necesario para que implementation bien)
+    implementation 'org.slf4j:slf4j-api:2.0.17'
 
     // Opcional: si quieres logs en consola
-    runtimeOnly 'ch.qos.logback:logback-classic:1.5.6'
+    runtimeOnly 'ch.qos.logback:logback-classic:1.5.18'
 }

@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   db:
-    image: postgres:16
+    image: postgres:15.3
     container_name: ms_autenticacion_db
     environment:
       POSTGRES_USER: postgres
@@ -14,14 +14,33 @@ services:
       - db-data:/var/lib/postgresql/data
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d autenticacion || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:8.8
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    networks:
+      - app-network
 
   localstack:
     image: localstack/localstack:2.2
     container_name: localstack
     environment:
       - SERVICES=sqs,dynamodb
-      - DEFAULT_REGION=us-east-1
-      - DATA_DIR=/tmp/localstack/data
+      - AWS_REGION=us-east-1
+      - PERSISTENCE=1
     ports:
       - "4566:4566"
       - "4571:4571"
@@ -29,6 +48,11 @@ services:
       - app-network
     volumes:
       - localstack-data:/tmp/localstack
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localstack:4566/_localstack/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   app-service:
     build: .
@@ -36,12 +60,21 @@ services:
     env_file:
       - .env
     depends_on:
-      - db
-      - localstack
+      db:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
     ports:
       - "8080:8080"
     networks:
       - app-network
+    command: [
+      "dockerize",
+      "-wait", "tcp://db:5432",
+      "-wait", "tcp://localstack:4566",
+      "-timeout", "60s",
+      "java", "-jar", "app-service.jar"
+    ]
 
 volumes:
   db-data:
