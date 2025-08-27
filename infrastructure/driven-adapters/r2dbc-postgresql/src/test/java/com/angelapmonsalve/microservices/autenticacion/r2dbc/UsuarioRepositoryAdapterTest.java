@@ -1,5 +1,6 @@
 package com.angelapmonsalve.microservices.autenticacion.r2dbc;
 
+import com.angelapmonsalve.microservices.autenticacion.model.usuario.Usuario;
 import com.angelapmonsalve.microservices.autenticacion.model.usuario.gateways.UsuarioRepository;
 import com.angelapmonsalve.microservices.autenticacion.r2dbc.adapter.UsuarioRepositoryAdapter;
 import org.junit.jupiter.api.Test;
@@ -18,63 +19,57 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UsuarioRepositoryAdapterTest {
-    // TODO: change four you own tests
 
     @InjectMocks
-    UsuarioRepositoryAdapter repositoryAdapter;
+    private UsuarioRepositoryAdapter repositoryAdapter;
 
     @Mock
-    UsuarioRepository repository;
+    private UsuarioRepository repository;
 
     @Mock
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
+
+    private Usuario buildUsuario() {
+        return Usuario.builder()
+                .id("1")
+                .nombres("Angela")
+                .correoElectronico("angela@test.com")
+                .build();
+    }
 
     @Test
-    void mustFindValueById() {
+    void mustGuardarUsuario() {
+        Usuario usuario = buildUsuario();
 
-        when(repository.findById("1")).thenReturn(Mono.just("test"));
-        when(mapper.map("test", Object.class)).thenReturn("test");
+        when(repository.guardar(usuario)).thenReturn(Mono.just(usuario));
+        when(mapper.map(usuario, Usuario.class)).thenReturn(usuario);
 
-        Mono<Object> result = repositoryAdapter.findById("1");
+        Mono<Usuario> result = repositoryAdapter.guardar(usuario);
 
         StepVerifier.create(result)
-                .expectNextMatches(value -> value.equals("test"))
+                .expectNextMatches(u -> u.getCorreoElectronico().equals("angela@test.com"))
                 .verifyComplete();
     }
 
     @Test
-    void mustFindAllValues() {
-        when(repository.findAll()).thenReturn(Flux.just("test"));
-        when(mapper.map("test", Object.class)).thenReturn("test");
+    void mustValidarExistenciaPorCorreo() {
+        when(repository.existePorCorreo("angela@test.com")).thenReturn(Mono.just(true));
 
-        Flux<Object> result = repositoryAdapter.findAll();
+        Mono<Boolean> result = repositoryAdapter.existePorCorreo("angela@test.com");
 
         StepVerifier.create(result)
-                .expectNextMatches(value -> value.equals("test"))
+                .expectNext(true)
                 .verifyComplete();
     }
 
     @Test
-    void mustFindByExample() {
-        when(repository.findAll(any(Example.class))).thenReturn(Flux.just("test"));
-        when(mapper.map("test", Object.class)).thenReturn("test");
+    void mustRetornarFalseCuandoCorreoNoExiste() {
+        when(repository.existePorCorreo("noexiste@test.com")).thenReturn(Mono.just(false));
 
-        Flux<Object> result = repositoryAdapter.findByExample("test");
-
-        StepVerifier.create(result)
-                .expectNextMatches(value -> value.equals("test"))
-                .verifyComplete();
-    }
-
-    @Test
-    void mustSaveValue() {
-        when(repository.save("test")).thenReturn(Mono.just("test"));
-        when(mapper.map("test", Object.class)).thenReturn("test");
-
-        Mono<Object> result = repositoryAdapter.save("test");
+        Mono<Boolean> result = repositoryAdapter.existePorCorreo("noexiste@test.com");
 
         StepVerifier.create(result)
-                .expectNextMatches(value -> value.equals("test"))
+                .expectNext(false)
                 .verifyComplete();
     }
 }
