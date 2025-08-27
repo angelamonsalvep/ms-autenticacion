@@ -3,13 +3,15 @@ package com.angelapmonsalve.microservices.autenticacion.r2dbc;
 import com.angelapmonsalve.microservices.autenticacion.model.usuario.Usuario;
 import com.angelapmonsalve.microservices.autenticacion.model.usuario.gateways.UsuarioRepository;
 import com.angelapmonsalve.microservices.autenticacion.r2dbc.adapter.UsuarioRepositoryAdapter;
+import com.angelapmonsalve.microservices.autenticacion.r2dbc.entities.UsuarioData;
+import com.angelapmonsalve.microservices.autenticacion.r2dbc.repository.UsuarioDataRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.reactivecommons.utils.ObjectMapper;
-import org.springframework.data.domain.Example;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -20,14 +22,13 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class UsuarioRepositoryAdapterTest {
 
-    @InjectMocks
-    private UsuarioRepositoryAdapter repositoryAdapter;
-
     @Mock
-    private UsuarioRepository repository;
+    private UsuarioDataRepository usuarioDataRepository;
 
     @Mock
     private ObjectMapper mapper;
+
+    private UsuarioRepositoryAdapter repositoryAdapter;
 
     private Usuario buildUsuario() {
         return Usuario.builder()
@@ -37,12 +38,27 @@ class UsuarioRepositoryAdapterTest {
                 .build();
     }
 
+    private UsuarioData buildUsuarioData() {
+        UsuarioData data = new UsuarioData();
+        data.setId("1");
+        data.setNombres("Angela");
+        data.setCorreoElectronico("angela@test.com");
+        return data;
+    }
+
+    @BeforeEach
+    void setUp() {
+        repositoryAdapter = new UsuarioRepositoryAdapter(usuarioDataRepository, mapper);
+    }
+
     @Test
     void mustGuardarUsuario() {
         Usuario usuario = buildUsuario();
+        UsuarioData usuarioData = buildUsuarioData();
 
-        when(repository.guardar(usuario)).thenReturn(Mono.just(usuario));
-        when(mapper.map(usuario, Usuario.class)).thenReturn(usuario);
+        when(mapper.map(usuario, UsuarioData.class)).thenReturn(usuarioData);
+        when(usuarioDataRepository.save(usuarioData)).thenReturn(Mono.just(usuarioData));
+        when(mapper.map(usuarioData, Usuario.class)).thenReturn(usuario);
 
         Mono<Usuario> result = repositoryAdapter.guardar(usuario);
 
@@ -53,7 +69,7 @@ class UsuarioRepositoryAdapterTest {
 
     @Test
     void mustValidarExistenciaPorCorreo() {
-        when(repository.existePorCorreo("angela@test.com")).thenReturn(Mono.just(true));
+        when(usuarioDataRepository.existsByCorreoElectronico("angela@test.com")).thenReturn(Mono.just(true));
 
         Mono<Boolean> result = repositoryAdapter.existePorCorreo("angela@test.com");
 
@@ -64,7 +80,7 @@ class UsuarioRepositoryAdapterTest {
 
     @Test
     void mustRetornarFalseCuandoCorreoNoExiste() {
-        when(repository.existePorCorreo("noexiste@test.com")).thenReturn(Mono.just(false));
+        when(usuarioDataRepository.existsByCorreoElectronico("noexiste@test.com")).thenReturn(Mono.just(false));
 
         Mono<Boolean> result = repositoryAdapter.existePorCorreo("noexiste@test.com");
 
