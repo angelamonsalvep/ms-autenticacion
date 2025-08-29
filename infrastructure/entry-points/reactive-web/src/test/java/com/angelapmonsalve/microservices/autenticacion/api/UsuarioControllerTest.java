@@ -1,31 +1,47 @@
 package com.angelapmonsalve.microservices.autenticacion.api;
 
+import com.angelapmonsalve.microservices.autenticacion.api.dto.UsuarioRequestDTO;
+import com.angelapmonsalve.microservices.autenticacion.api.dto.UsuarioResponseDTO;
+import com.angelapmonsalve.microservices.autenticacion.api.mapper.UsuarioMapper;
 import com.angelapmonsalve.microservices.autenticacion.model.usuario.Usuario;
 import com.angelapmonsalve.microservices.autenticacion.usecase.registrarusuario.RegistrarUsuarioUseCase;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
 import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+@WebFluxTest(controllers = UsuarioController.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {UsuarioController.class, UsuarioMapper.class, UsuarioControllerTest.TestConfig.class})
 class UsuarioControllerTest {
 
-    @Mock
+    @Autowired
+    private WebTestClient webTestClient;
+
+    @Autowired
     private RegistrarUsuarioUseCase registrarUsuarioUseCase;
 
-    @InjectMocks
-    private UsuarioController usuarioController;
+    @Autowired
+    private UsuarioMapper usuarioMapper;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
+    @TestConfiguration
+    static class TestConfig {
+        @Bean
+        public RegistrarUsuarioUseCase registrarUsuarioUseCase() {
+            return org.mockito.Mockito.mock(RegistrarUsuarioUseCase.class);
+        }
     }
 
     @Test
@@ -41,19 +57,177 @@ class UsuarioControllerTest {
                 .salarioBase(3500.0)
                 .build();
 
-        when(registrarUsuarioUseCase.registrarUsuario(any()))
+        when(registrarUsuarioUseCase.registrarUsuario(any(Usuario.class)))
                 .thenReturn(Mono.just(usuario));
 
-        // Llamamos al método del controller directamente
-        Mono<Usuario> response = usuarioController.registrarUsuario(usuario);
+        var request = new UsuarioRequestDTO(
+                "Gael",
+                "Castillo",
+                LocalDate.of(1995, 5, 15),
+                "Calle Falsa 123",
+                "3001234567",
+                "gael.castillo@mail.com",
+                3500.0
+        );
 
-        // Verificamos el resultado con StepVerifier
-        StepVerifier.create(response)
-                .expectNextMatches(u ->
-                        u.getId().equals("123") &&
-                                u.getNombres().equals("Gael") &&
-                                u.getApellidos().equals("Castillo")
-                )
-                .verifyComplete();
+        webTestClient.post().uri("/api/v1/usuarios")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(UsuarioResponseDTO.class)
+                .value(responseDto -> {
+                    assert responseDto.id().equals("123");
+                    assert responseDto.nombres().equals("Gael");
+                });
     }
+
+    @Test
+    void deberiaRetornarErrorPorNombresVacios() {
+        var request = new UsuarioRequestDTO(
+                "",
+                "Castillo",
+                LocalDate.of(1995, 5, 15),
+                "Calle Falsa 123",
+                "3001234567",
+                "gael.castillo@mail.com",
+                3500.0
+        );
+        webTestClient.post().uri("/api/v1/usuarios")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void deberiaRetornarErrorPorApellidosVacios() {
+        var request = new UsuarioRequestDTO(
+                "Gael",
+                "",
+                LocalDate.of(1995, 5, 15),
+                "Calle Falsa 123",
+                "3001234567",
+                "gael.castillo@mail.com",
+                3500.0
+        );
+        webTestClient.post().uri("/api/v1/usuarios")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void deberiaRetornarErrorPorCorreoVacio() {
+        var request = new UsuarioRequestDTO(
+                "Gael",
+                "Castillo",
+                LocalDate.of(1995, 5, 15),
+                "Calle Falsa 123",
+                "3001234567",
+                "",
+                3500.0
+        );
+        webTestClient.post().uri("/api/v1/usuarios")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void deberiaRetornarErrorPorSalarioFueraDeRango() {
+        var request = new UsuarioRequestDTO(
+                "Gael",
+                "Castillo",
+                LocalDate.of(1995, 5, 15),
+                "Calle Falsa 123",
+                "3001234567",
+                "gael.castillo@mail.com",
+                -1000.0
+        );
+        webTestClient.post().uri("/api/v1/usuarios")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void deberiaRetornarErrorPorSalarioSuperiorAlLimite() {
+        var request = new UsuarioRequestDTO(
+                "Gael",
+                "Castillo",
+                LocalDate.of(1995, 5, 15),
+                "Calle Falsa 123",
+                "3001234567",
+                "gael.castillo@mail.com",
+                20000000.0 // mayor al límite
+        );
+        webTestClient.post().uri("/api/v1/usuarios")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void deberiaRetornarErrorPorCorreoInvalido() {
+        var request = new UsuarioRequestDTO(
+                "Gael",
+                "Castillo",
+                LocalDate.of(1995, 5, 15),
+                "Calle Falsa 123",
+                "3001234567",
+                "correo-invalido",
+                3500.0
+        );
+        webTestClient.post().uri("/api/v1/usuarios")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void deberiaRetornarErrorPorCorreoDuplicado() {
+        when(registrarUsuarioUseCase.registrarUsuario(any()))
+                .thenReturn(Mono.error(new RuntimeException("El correo ya está registrado.")));
+        var request = new UsuarioRequestDTO(
+                "Gael",
+                "Castillo",
+                LocalDate.of(1995, 5, 15),
+                "Calle Falsa 123",
+                "3001234567",
+                "gael.castillo@mail.com",
+                3500.0
+        );
+        webTestClient.post().uri("/api/v1/usuarios")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().is5xxServerError();
+    }
+
+    @Test
+    void deberiaRetornarErrorPorExcepcionInesperada() {
+        when(registrarUsuarioUseCase.registrarUsuario(any()))
+                .thenReturn(Mono.error(new RuntimeException("Error inesperado")));
+        var request = new UsuarioRequestDTO(
+                "Gael",
+                "Castillo",
+                LocalDate.of(1995, 5, 15),
+                "Calle Falsa 123",
+                "3001234567",
+                "gael.castillo@mail.com",
+                3500.0
+        );
+        webTestClient.post().uri("/api/v1/usuarios")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().is5xxServerError();
+    }
+
 }
