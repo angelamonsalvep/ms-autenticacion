@@ -65,7 +65,8 @@ services:
       localstack:
         condition: service_healthy
     ports:
-      - "8080:8080"
+      - "8080:8080"   # Puerto de la app
+      - "5005:5005"   # Puerto de debug
     networks:
       - app-network
     command: [
@@ -73,7 +74,9 @@ services:
       "-wait", "tcp://db:5432",
       "-wait", "tcp://localstack:4566",
       "-timeout", "60s",
-      "java", "-jar", "app-service.jar"
+      "java",
+      "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005",
+      "-jar", "app-service.jar"
     ]
 
 volumes:
