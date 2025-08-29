@@ -1,6 +1,7 @@
 package com.angelapmonsalve.microservices.autenticacion.usecase.registrarusuario;
 
 import com.angelapmonsalve.microservices.autenticacion.model.usuario.Usuario;
+import com.angelapmonsalve.microservices.autenticacion.model.usuario.exception.UsuarioInvalidoException;
 import com.angelapmonsalve.microservices.autenticacion.model.usuario.gateways.LoggerService;
 import com.angelapmonsalve.microservices.autenticacion.model.usuario.gateways.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,8 @@ public class RegistrarUsuarioUseCase {
         return validarUsuario(usuario)
                 .then(usuarioRepository.existePorCorreo(usuario.getCorreoElectronico())
                         .flatMap(existe -> {
-                            if (existe) {
-                                return Mono.error(new IllegalArgumentException("El correo ya está registrado"));
+                            if (Boolean.TRUE.equals(existe)) {
+                                return Mono.error(new UsuarioInvalidoException("El correo ya está registrado"));
                             }
                             return usuarioRepository.guardar(usuario);
                         })
@@ -33,16 +34,16 @@ public class RegistrarUsuarioUseCase {
 
     private Mono<Void> validarUsuario(Usuario usuario) {
         if (Objects.isNull(usuario.getNombres()) || usuario.getNombres().isBlank()) {
-            return Mono.error(new IllegalArgumentException("El nombre es obligatorio"));
+            return Mono.error(new UsuarioInvalidoException("El nombre es obligatorio"));
         }
         if (Objects.isNull(usuario.getApellidos()) || usuario.getApellidos().isBlank()) {
-            return Mono.error(new IllegalArgumentException("El apellido es obligatorio"));
+            return Mono.error(new UsuarioInvalidoException("El apellido es obligatorio"));
         }
         if (Objects.isNull(usuario.getCorreoElectronico()) || !esCorreoValido(usuario.getCorreoElectronico())) {
-            return Mono.error(new IllegalArgumentException("Correo electrónico inválido"));
+            return Mono.error(new UsuarioInvalidoException("Correo electrónico inválido"));
         }
         if (Objects.isNull(usuario.getSalarioBase()) || usuario.getSalarioBase() <= 0 || usuario.getSalarioBase() > 15000000) {
-            return Mono.error(new IllegalArgumentException("El salario base debe estar entre 0 y 15,000,000"));
+            return Mono.error(new UsuarioInvalidoException("El salario base debe estar entre 0 y 15,000,000"));
         }
         return Mono.empty();
     }
