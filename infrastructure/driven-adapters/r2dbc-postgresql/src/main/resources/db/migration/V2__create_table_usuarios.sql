@@ -1,11 +1,11 @@
 -- Crear esquema
-create schema if not exists auth;
+create schema if not exists public;
 
 -- Habilitar extensión para UUID
 create extension if not exists "pgcrypto";
 
 -- Crear tabla
-create table if not exists auth.usuarios (
+create table if not exists public.usuarios (
   id uuid primary key default gen_random_uuid(),
   nombres varchar(120) not null,
   apellidos varchar(120) not null,
@@ -18,4 +18,4 @@ create table if not exists auth.usuarios (
 );
 
 -- Índice único
-create unique index if not exists uk_usuarios_correo on auth.usuarios(correo_electronico);
+create unique index if not exists uk_usuarios_correo on public.usuarios(correo_electronico);
