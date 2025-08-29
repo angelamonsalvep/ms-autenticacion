@@ -40,7 +40,7 @@ class UsuarioRepositoryAdapterTest {
 
     private UsuarioData buildUsuarioData() {
         UsuarioData data = new UsuarioData();
-        data.setId("1");
+        data.setId(java.util.UUID.fromString("00000000-0000-0000-0000-000000000001"));
         data.setNombres("Angela");
         data.setCorreoElectronico("angela@test.com");
         return data;
