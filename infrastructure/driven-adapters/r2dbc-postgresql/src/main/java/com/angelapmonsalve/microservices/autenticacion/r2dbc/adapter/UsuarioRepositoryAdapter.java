@@ -8,6 +8,7 @@ import com.angelapmonsalve.microservices.autenticacion.r2dbc.repository.UsuarioD
 import lombok.extern.slf4j.Slf4j;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -28,6 +29,7 @@ public class UsuarioRepositoryAdapter extends ReactiveAdapterOperations<
     }
 
     @Override
+    @Transactional
     public Mono<Usuario> guardar(Usuario usuario) {
         return repository.save(mapper.map(usuario, UsuarioData.class))
                 .doOnSuccess(saved -> log.info("Usuario guardado con correo {}", saved.getCorreoElectronico()))
