@@ -36,4 +36,10 @@ public class UsuarioData {
     @Column("salario_base")
     private Double salarioBase;
 
+    @Column("tipo_identificacion")
+    private String tipoIdentificacion;
+
+    @Column("numero_identificacion")
+    private Long numeroIdentificacion;
+
 }

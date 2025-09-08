@@ -40,5 +40,9 @@ public class UsuarioRepositoryAdapter extends ReactiveAdapterOperations<
     public Mono<Boolean> existePorCorreo(String correo) {
         return repository.existsByCorreoElectronico(correo);
     }
-}
 
+    @Override
+    public Mono<Boolean> existePorTipoYNumeroIdentificacion(String tipoIdentificacion, Long numeroIdentificacion) {
+        return repository.existsByTipoIdentificacionAndNumeroIdentificacion(tipoIdentificacion, numeroIdentificacion);
+    }
+}
