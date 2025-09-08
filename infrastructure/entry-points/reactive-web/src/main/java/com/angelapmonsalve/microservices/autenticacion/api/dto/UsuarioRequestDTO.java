@@ -36,5 +36,13 @@ public record UsuarioRequestDTO(
         @Schema(description = "Salario base del usuario", example = "2500000")
         @Min(value = 0, message = "El salario debe ser mayor o igual a 0")
         @Max(value = 15000000, message = "El salario no debe superar 15,000,000")
-        Double salarioBase
+        Double salarioBase,
+
+        @Schema(description = "Tipo de identificación del usuario", example = "CC")
+        @NotBlank(message = "El tipo de identificación es obligatorio")
+        String tipoIdentificacion,
+
+        @Schema(description = "Número de identificación del usuario", example = "123456789012345")
+        @NotNull(message = "El número de identificación es obligatorio")
+        Long numeroIdentificacion
 ) {}

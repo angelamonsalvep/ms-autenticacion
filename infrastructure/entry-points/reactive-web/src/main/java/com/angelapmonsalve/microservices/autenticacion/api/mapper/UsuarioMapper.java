@@ -17,6 +17,8 @@ public class UsuarioMapper {
                 .telefono(dto.telefono())
                 .correoElectronico(dto.correoElectronico())
                 .salarioBase(dto.salarioBase())
+                .tipoIdentificacion(dto.tipoIdentificacion())
+                .numeroIdentificacion(dto.numeroIdentificacion())
                 .build();
     }
 
@@ -29,7 +31,9 @@ public class UsuarioMapper {
                 usuario.getCorreoElectronico(),
                 usuario.getTelefono(),
                 usuario.getDireccion(),
-                usuario.getSalarioBase()
+                usuario.getSalarioBase(),
+                usuario.getTipoIdentificacion(),
+                usuario.getNumeroIdentificacion()
         );
     }
 }

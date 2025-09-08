@@ -51,6 +51,17 @@ public record UsuarioResponseDTO(
                 description = "Salario base del solicitante (entre 0 y 15'000.000)",
                 example = "3500000"
         )
-        Double salarioBase
-) {}
+        Double salarioBase,
 
+        @Schema(
+                description = "Tipo de identificación del usuario",
+                example = "CC"
+        )
+        String tipoIdentificacion,
+
+        @Schema(
+                description = "Número de identificación del usuario",
+                example = "123456789012345"
+        )
+        Long numeroIdentificacion
+) {}
