@@ -18,4 +18,6 @@ public class Usuario {
     private String telefono;
     private String correoElectronico;
     private Double salarioBase;
+    private String tipoIdentificacion;
+    private Long numeroIdentificacion;
 }
