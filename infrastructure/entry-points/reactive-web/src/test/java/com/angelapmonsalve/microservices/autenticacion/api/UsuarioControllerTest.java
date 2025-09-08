@@ -67,7 +67,9 @@ class UsuarioControllerTest {
                 "Calle Falsa 123",
                 "3001234567",
                 "gael.castillo@mail.com",
-                3500.0
+                3500.0,
+                "CC",
+                12345678901L
         );
 
         webTestClient.post().uri("/api/v1/usuarios")
@@ -91,7 +93,9 @@ class UsuarioControllerTest {
                 "Calle Falsa 123",
                 "3001234567",
                 "gael.castillo@mail.com",
-                3500.0
+                3500.0,
+                "CC",
+                12345678901L
         );
         webTestClient.post().uri("/api/v1/usuarios")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -109,7 +113,9 @@ class UsuarioControllerTest {
                 "Calle Falsa 123",
                 "3001234567",
                 "gael.castillo@mail.com",
-                3500.0
+                3500.0,
+                "CC",
+                12345678901L
         );
         webTestClient.post().uri("/api/v1/usuarios")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -127,7 +133,9 @@ class UsuarioControllerTest {
                 "Calle Falsa 123",
                 "3001234567",
                 "",
-                3500.0
+                3500.0,
+                "CC",
+                12345678901L
         );
         webTestClient.post().uri("/api/v1/usuarios")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -145,7 +153,9 @@ class UsuarioControllerTest {
                 "Calle Falsa 123",
                 "3001234567",
                 "gael.castillo@mail.com",
-                -1000.0
+                -1000.0,
+                "CC",
+                12345678901L
         );
         webTestClient.post().uri("/api/v1/usuarios")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -164,6 +174,8 @@ class UsuarioControllerTest {
                 "3001234567",
                 "gael.castillo@mail.com",
                 20000000.0 // mayor al límite
+                , "CC",
+                12345678901L
         );
         webTestClient.post().uri("/api/v1/usuarios")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -181,7 +193,9 @@ class UsuarioControllerTest {
                 "Calle Falsa 123",
                 "3001234567",
                 "correo-invalido",
-                3500.0
+                3500.0,
+                "CC",
+                12345678901L
         );
         webTestClient.post().uri("/api/v1/usuarios")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -201,7 +215,9 @@ class UsuarioControllerTest {
                 "Calle Falsa 123",
                 "3001234567",
                 "gael.castillo@mail.com",
-                3500.0
+                3500.0,
+                "CC",
+                12345678901L
         );
         webTestClient.post().uri("/api/v1/usuarios")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -221,7 +237,9 @@ class UsuarioControllerTest {
                 "Calle Falsa 123",
                 "3001234567",
                 "gael.castillo@mail.com",
-                3500.0
+                3500.0,
+                "CC",
+                12345678901L
         );
         webTestClient.post().uri("/api/v1/usuarios")
                 .contentType(MediaType.APPLICATION_JSON)
