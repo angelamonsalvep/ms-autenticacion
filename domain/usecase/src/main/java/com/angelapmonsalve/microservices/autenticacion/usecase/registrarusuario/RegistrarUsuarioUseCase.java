@@ -20,12 +20,18 @@ public class RegistrarUsuarioUseCase {
         logger.info("Iniciando registro de usuario con correo {}", usuario.getCorreoElectronico());
 
         return validarUsuario(usuario)
-                .then(usuarioRepository.existePorCorreo(usuario.getCorreoElectronico())
-                        .flatMap(existe -> {
-                            if (Boolean.TRUE.equals(existe)) {
-                                return Mono.error(new UsuarioInvalidoException("El correo ya está registrado"));
+                .then(usuarioRepository.existePorTipoYNumeroIdentificacion(usuario.getTipoIdentificacion(), usuario.getNumeroIdentificacion())
+                        .flatMap(existeDoc -> {
+                            if (Boolean.TRUE.equals(existeDoc)) {
+                                return Mono.error(new UsuarioInvalidoException("Ya existe un usuario con ese tipo y número de identificación"));
                             }
-                            return usuarioRepository.guardar(usuario);
+                            return usuarioRepository.existePorCorreo(usuario.getCorreoElectronico())
+                                    .flatMap(existeCorreo -> {
+                                        if (Boolean.TRUE.equals(existeCorreo)) {
+                                            return Mono.error(new UsuarioInvalidoException("El correo ya está registrado"));
+                                        }
+                                        return usuarioRepository.guardar(usuario);
+                                    });
                         })
                 )
                 .doOnSuccess(u -> logger.info("Usuario registrado con éxito: {}", u.getId()))
