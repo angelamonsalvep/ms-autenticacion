@@ -42,6 +42,10 @@ class UsuarioControllerTest {
         public RegistrarUsuarioUseCase registrarUsuarioUseCase() {
             return org.mockito.Mockito.mock(RegistrarUsuarioUseCase.class);
         }
+        @Bean
+        public com.angelapmonsalve.microservices.autenticacion.usecase.consultarexistenciausuario.ConsultarExistenciaUsuarioUseCase consultarExistenciaUsuarioUseCase() {
+            return org.mockito.Mockito.mock(com.angelapmonsalve.microservices.autenticacion.usecase.consultarexistenciausuario.ConsultarExistenciaUsuarioUseCase.class);
+        }
     }
 
     @Test

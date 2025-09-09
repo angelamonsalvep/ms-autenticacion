@@ -38,9 +38,12 @@ class RegistrarUsuarioUseCaseTest {
                 .apellidos("Pérez")
                 .correoElectronico(CORREO_ANA)
                 .salarioBase(SALARIO_VALIDO)
+                .tipoIdentificacion("CC")
+                .numeroIdentificacion(12345678L)
                 .build();
         when(usuarioRepository.existePorCorreo(CORREO_ANA)).thenReturn(Mono.just(false));
         when(usuarioRepository.guardar(any(Usuario.class))).thenReturn(Mono.just(usuario));
+        when(usuarioRepository.existePorTipoYNumeroIdentificacion(anyString(), anyLong())).thenReturn(Mono.just(false));
 
         StepVerifier.create(useCase.registrarUsuario(usuario))
                 .expectNext(usuario)
@@ -59,8 +62,11 @@ class RegistrarUsuarioUseCaseTest {
                 .apellidos("Gómez")
                 .correoElectronico(CORREO_LUIS)
                 .salarioBase(8000000.0)
+                .tipoIdentificacion("CC")
+                .numeroIdentificacion(87654321L)
                 .build();
         when(usuarioRepository.existePorCorreo(CORREO_LUIS)).thenReturn(Mono.just(true));
+        when(usuarioRepository.existePorTipoYNumeroIdentificacion(anyString(), anyLong())).thenReturn(Mono.just(false));
 
         StepVerifier.create(useCase.registrarUsuario(usuario))
                 .expectErrorMatches(e -> e instanceof UsuarioInvalidoException && e.getMessage().contains("El correo ya está registrado"))
@@ -105,6 +111,9 @@ class RegistrarUsuarioUseCaseTest {
             }
             @Override public Mono<Usuario> guardar(Usuario usuario) {
                 return Mono.empty(); // Valor seguro para evitar NPE
+            }
+            @Override public Mono<Boolean> existePorTipoYNumeroIdentificacion(String tipo, Long numero) {
+                return Mono.just(false); // Valor seguro para evitar NPE
             }
         };
         useCase = new RegistrarUsuarioUseCase(usuarioRepository, loggerService);

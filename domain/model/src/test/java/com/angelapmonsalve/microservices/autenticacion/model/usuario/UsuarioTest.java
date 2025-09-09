@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class UsuarioTest {
     @Test
     void crearUsuarioConConstructor() {
-        Usuario usuario = new Usuario("1", "Ana", "Pérez", LocalDate.of(1990, 1, 1), "Calle 123", "1234567890", "ana@mail.com", 5000000.0);
+        Usuario usuario = new Usuario("1", "Ana", "Pérez", LocalDate.of(1990, 1, 1), "Calle 123", "1234567890", "ana@mail.com", 5000000.0, "CC", 12345678L);
         assertEquals("Ana", usuario.getNombres());
         assertEquals("Pérez", usuario.getApellidos());
         assertEquals("ana@mail.com", usuario.getCorreoElectronico());
@@ -45,4 +45,3 @@ class UsuarioTest {
         assertEquals(1000000.0, usuario.getSalarioBase());
     }
 }
-

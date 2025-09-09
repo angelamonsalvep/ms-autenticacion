@@ -36,6 +36,10 @@ class ConfigTest {
         RegistrarUsuarioUseCase registrarUsuarioUseCase() {
             return Mockito.mock(RegistrarUsuarioUseCase.class);
         }
+        @Bean
+        com.angelapmonsalve.microservices.autenticacion.usecase.consultarexistenciausuario.ConsultarExistenciaUsuarioUseCase consultarExistenciaUsuarioUseCase() {
+            return Mockito.mock(com.angelapmonsalve.microservices.autenticacion.usecase.consultarexistenciausuario.ConsultarExistenciaUsuarioUseCase.class);
+        }
     }
 
     @Test
@@ -58,7 +62,9 @@ class ConfigTest {
                 "address",
                 "1234567",
                 "test@user.com",
-                50000.0
+                5000000.0,
+                "CC",
+                12345678L
         );
 
         // cuando hago POST al controlador real

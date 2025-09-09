@@ -37,6 +37,10 @@ class GlobalExceptionHandlerTest {
         public RegistrarUsuarioUseCase registrarUsuarioUseCase() {
             return Mockito.mock(RegistrarUsuarioUseCase.class);
         }
+        @Bean
+        public com.angelapmonsalve.microservices.autenticacion.usecase.consultarexistenciausuario.ConsultarExistenciaUsuarioUseCase consultarExistenciaUsuarioUseCase() {
+            return Mockito.mock(com.angelapmonsalve.microservices.autenticacion.usecase.consultarexistenciausuario.ConsultarExistenciaUsuarioUseCase.class);
+        }
     }
 
     @Test
@@ -58,7 +62,17 @@ class GlobalExceptionHandlerTest {
 
         webTestClient.post().uri("/api/v1/usuarios")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue("{\"nombres\":\"Test\",\"apellidos\":\"User\",\"fechaNacimiento\":\"1990-01-01\",\"direccion\":\"address\",\"telefono\":\"1234567\",\"correoElectronico\":\"test@test.com\",\"salarioBase\":1000}")
+                .bodyValue("{" +
+                        "\"nombres\":\"Test\"," +
+                        "\"apellidos\":\"User\"," +
+                        "\"fechaNacimiento\":\"1990-01-01\"," +
+                        "\"direccion\":\"address\"," +
+                        "\"telefono\":\"1234567\"," +
+                        "\"correoElectronico\":\"test@test.com\"," +
+                        "\"salarioBase\":1000," +
+                        "\"tipoIdentificacion\":\"CC\"," +
+                        "\"numeroIdentificacion\":12345678" +
+                        "}")
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
                 .expectBody()
