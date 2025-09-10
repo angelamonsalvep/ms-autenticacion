@@ -1,0 +1,13 @@
+# Carpetas de compilación
+**/build/
+**/.gradle/
+**/out/
+
+# Archivos de IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Archivos del sistema
+.DS_Store

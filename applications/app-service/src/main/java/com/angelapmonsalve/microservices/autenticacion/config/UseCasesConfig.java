@@ -1,14 +1,29 @@
 package com.angelapmonsalve.microservices.autenticacion.config;
 
-import org.springframework.context.annotation.ComponentScan;
+import com.angelapmonsalve.microservices.autenticacion.model.usuario.gateways.LoggerService;
+import com.angelapmonsalve.microservices.autenticacion.model.usuario.gateways.UsuarioRepository;
+import com.angelapmonsalve.microservices.autenticacion.usecase.consultarexistenciausuario.ConsultarExistenciaUsuarioUseCase;
+import com.angelapmonsalve.microservices.autenticacion.usecase.registrarusuario.RegistrarUsuarioUseCase;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
 
 @Configuration
-@ComponentScan(basePackages = "com.angelapmonsalve.microservices.autenticacion.usecase",
-        includeFilters = {
-                @ComponentScan.Filter(type = FilterType.REGEX, pattern = "^.+UseCase$")
-        },
-        useDefaultFilters = false)
 public class UseCasesConfig {
+
+    @Bean
+    public RegistrarUsuarioUseCase registrarUsuarioUseCase(
+            UsuarioRepository usuarioRepository,
+            LoggerService loggerService
+    ) {
+        return new RegistrarUsuarioUseCase(usuarioRepository, loggerService);
+    }
+
+    @Bean
+    public ConsultarExistenciaUsuarioUseCase consultarExistenciaUsuarioUseCase(
+            UsuarioRepository usuarioRepository
+    ) {
+        return new ConsultarExistenciaUsuarioUseCase(usuarioRepository);
+    }
+
+    // 👉 Aquí solo defines casos de uso, nunca adapters.
 }
