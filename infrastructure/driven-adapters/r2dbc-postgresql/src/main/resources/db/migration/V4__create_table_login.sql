@@ -1,0 +1,6 @@
+CREATE TABLE login (
+    correo VARCHAR(100) PRIMARY KEY,
+    clave VARCHAR(100) NOT NULL,
+    rol VARCHAR(20) NOT NULL
+);
+
