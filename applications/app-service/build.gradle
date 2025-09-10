@@ -17,6 +17,7 @@ ext {
 }
 
 dependencies {
+	implementation project(':jwt')
     implementation 'software.amazon.awssdk:sts'
     implementation project(':logger')
     implementation project(':sqs-sender')
