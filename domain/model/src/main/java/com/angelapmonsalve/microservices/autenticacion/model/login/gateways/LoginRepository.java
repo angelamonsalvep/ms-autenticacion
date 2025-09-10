@@ -5,5 +5,4 @@ import reactor.core.publisher.Mono;
 
 public interface LoginRepository {
     Mono<Login> findByCorreo(String correo);
-    Mono<String> generarToken(Login login);
 }
