@@ -1,0 +1,19 @@
+dependencies {
+    implementation project(':model')
+    implementation 'org.springframework:spring-context'
+    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+
+    // R2DBC driver oficial para PostgreSQL
+    implementation "org.postgresql:r2dbc-postgresql:${r2dbcPostgresqlVersion}"
+
+    // JDBC driver (Flyway necesita JDBC para aplicar migraciones)
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // Flyway para migraciones
+    implementation "org.flywaydb:flyway-core:${flywayVersion}"
+
+    // Utils
+    implementation 'org.reactivecommons.utils:object-mapper-api:0.1.0'
+
+    testImplementation 'org.reactivecommons.utils:object-mapper:0.1.0'
+}
