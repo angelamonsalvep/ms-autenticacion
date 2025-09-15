@@ -1,9 +1,11 @@
 package com.angelapmonsalve.microservices.autenticacion.api.exception;
 
-import com.angelapmonsalve.microservices.autenticacion.api.UsuarioController;
 import com.angelapmonsalve.microservices.autenticacion.api.config.CorsConfig;
 import com.angelapmonsalve.microservices.autenticacion.api.config.SecurityHeadersConfig;
+import com.angelapmonsalve.microservices.autenticacion.api.handler.UsuarioHandler;
+import com.angelapmonsalve.microservices.autenticacion.api.router.UsuarioRouter;
 import com.angelapmonsalve.microservices.autenticacion.usecase.registrarusuario.RegistrarUsuarioUseCase;
+import com.angelapmonsalve.microservices.autenticacion.usecase.consultarexistenciausuario.ConsultarExistenciaUsuarioUseCase;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @WebFluxTest
-@ContextConfiguration(classes = {GlobalExceptionHandler.class, UsuarioController.class, GlobalExceptionHandlerTest.TestConfig.class})
+@ContextConfiguration(classes = {
+    GlobalExceptionHandler.class,
+    UsuarioHandler.class,
+    UsuarioRouter.class,
+    GlobalExceptionHandlerTest.TestConfig.class
+})
 @Import({CorsConfig.class, SecurityHeadersConfig.class})
 class GlobalExceptionHandlerTest {
 
@@ -38,8 +45,8 @@ class GlobalExceptionHandlerTest {
             return Mockito.mock(RegistrarUsuarioUseCase.class);
         }
         @Bean
-        public com.angelapmonsalve.microservices.autenticacion.usecase.consultarexistenciausuario.ConsultarExistenciaUsuarioUseCase consultarExistenciaUsuarioUseCase() {
-            return Mockito.mock(com.angelapmonsalve.microservices.autenticacion.usecase.consultarexistenciausuario.ConsultarExistenciaUsuarioUseCase.class);
+        public ConsultarExistenciaUsuarioUseCase consultarExistenciaUsuarioUseCase() {
+            return Mockito.mock(ConsultarExistenciaUsuarioUseCase.class);
         }
     }
 
