@@ -10,7 +10,7 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @Configuration
-public class RouterRest {
+public class LoginRouter {
     @Bean
     public RouterFunction<ServerResponse> routerFunction(LoginHandler handler) {
         return route(POST("/api/v1/login"), handler::listenPOSTLoginUseCase);
