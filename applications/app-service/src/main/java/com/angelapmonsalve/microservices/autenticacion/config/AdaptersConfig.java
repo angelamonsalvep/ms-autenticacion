@@ -1,5 +1,7 @@
 package com.angelapmonsalve.microservices.autenticacion.config;
 
+import com.angelapmonsalve.microservices.autenticacion.jwt.JwtTokenProvider;
+import com.angelapmonsalve.microservices.autenticacion.model.login.gateways.TokenProvider;
 import com.angelapmonsalve.microservices.autenticacion.model.usuario.gateways.LoggerService;
 import com.angelapmonsalve.microservices.autenticacion.model.usuario.gateways.UsuarioRepository;
 import com.angelapmonsalve.microservices.autenticacion.r2dbc.adapter.UsuarioRepositoryAdapter;
@@ -20,5 +22,10 @@ public class AdaptersConfig {
     @Bean
     public LoggerService loggerService() {
         return new Slf4jLoggerAdapter();
+    }
+
+    @Bean
+    public TokenProvider tokenProvider() {
+        return new JwtTokenProvider();
     }
 }
