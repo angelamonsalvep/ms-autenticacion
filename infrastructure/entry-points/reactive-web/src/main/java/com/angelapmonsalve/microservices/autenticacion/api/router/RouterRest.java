@@ -1,5 +1,6 @@
-package com.angelapmonsalve.microservices.autenticacion.api;
+package com.angelapmonsalve.microservices.autenticacion.api.router;
 
+import com.angelapmonsalve.microservices.autenticacion.api.handler.LoginHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;
