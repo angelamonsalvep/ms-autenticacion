@@ -14,7 +14,9 @@ class RouterRestTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    /*@Test
+    // TODO: Test deshabilitado temporalmente por mantenimiento en infraestructura
+    /*
+    @Test
     void testLoginEndpoint() {
         webTestClient.post()
                 .uri("/api/v1/login")
@@ -24,5 +26,6 @@ class RouterRestTest {
                 .expectStatus().isOk()
                 .expectBody(String.class)
                 .value(response -> Assertions.assertThat(response).contains("token"));
-    }*/
+    }
+    */
 }
